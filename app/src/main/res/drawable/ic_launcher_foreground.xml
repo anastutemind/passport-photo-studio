@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- App mark: a trimmed passport photo (white card, portrait, caption strip).
+     Safe zone of the 108dp adaptive canvas is 66dp (21..87); the card sits inside it. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- white photo card -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M35,24h38a5,5 0 0 1 5,5v50a5,5 0 0 1 -5,5H35a5,5 0 0 1 -5,-5V29a5,5 0 0 1 5,-5z" />
+
+    <!-- head -->
+    <path
+        android:fillColor="#FF142D6E"
+        android:pathData="M54,36.5m-8.5,0a8.5,8.5 0 1,0 17,0a8.5,8.5 0 1,0 -17,0" />
+
+    <!-- shoulders -->
+    <path
+        android:fillColor="#FF142D6E"
+        android:pathData="M40,70 C40,58 46,52 54,52 C62,52 68,58 68,70 Z" />
+
+    <!-- caption strip (name / DOB / date) -->
+    <path
+        android:fillColor="#FF2E6BE6"
+        android:pathData="M34,70h40v7a1,1 0 0 1 -1,1H35a1,1 0 0 1 -1,-1z" />
+</vector>

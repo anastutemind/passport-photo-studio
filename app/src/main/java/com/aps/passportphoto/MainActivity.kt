@@ -4,6 +4,7 @@ import android.graphics.Color as AColor
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,6 +34,7 @@ import kotlin.math.roundToInt
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             MaterialTheme(colorScheme = lightColorScheme()) {
                 Surface(color = MaterialTheme.colorScheme.background) {
@@ -205,6 +207,22 @@ fun EditorScreen(vm: EditorViewModel = viewModel()) {
                         Button(onClick = { vm.exportPdf() }, enabled = !vm.busy) { Text("Save PDF") }
                         OutlinedButton(onClick = { vm.print() }, enabled = !vm.busy) { Text("Print") }
                     }
+                }
+
+                // ---- about ----
+                TextButton(
+                    onClick = {
+                        val ctx = vm.getApplication<android.app.Application>()
+                        ctx.startActivity(
+                            android.content.Intent(
+                                android.content.Intent.ACTION_VIEW,
+                                android.net.Uri.parse("https://anastutemind.github.io/passport-photo-studio-privacy-policy.html")
+                            ).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Privacy policy · Passport Photo Studio 1.0", fontSize = 12.sp)
                 }
                 Spacer(Modifier.height(24.dp))
             }

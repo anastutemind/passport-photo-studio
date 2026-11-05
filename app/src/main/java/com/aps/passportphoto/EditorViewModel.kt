@@ -170,9 +170,15 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
                 if (le != null && re != null) {
                     fx = (le.x + re.x) / 2f
                     fy = (le.y + re.y) / 2f
-                    angle = Math.toDegrees(
+                    // Head roll from the eye pair is only defined modulo 180 degrees:
+                    // which landmark is "left" in image space flips with the photo, so
+                    // fold the angle into (-90, 90] to keep a level face level.
+                    var deg = Math.toDegrees(
                         Math.atan2((le.y - re.y).toDouble(), (le.x - re.x).toDouble())
                     ).toFloat()
+                    deg = ((deg % 180f) + 180f) % 180f
+                    if (deg > 90f) deg -= 180f
+                    angle = deg
                 } else {
                     fx = box.exactCenterX(); fy = box.exactCenterY(); angle = 0f
                 }

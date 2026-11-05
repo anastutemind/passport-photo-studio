@@ -8,3 +8,8 @@
 .externalNativeBuild/
 .cxx/
 app/build/
+
+# signing material never enters the repo
+keystore.properties
+*.jks
+*.keystore
