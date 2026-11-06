@@ -29,6 +29,9 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0.0"
+        // Only ship arm64 native libs (ONNX Runtime) - covers essentially every phone on minSdk 29
+        // and keeps the APK small instead of bundling x86/armeabi variants.
+        ndk { abiFilters += listOf("arm64-v8a") }
     }
 
     signingConfigs {
@@ -44,7 +47,9 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("debug")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             if (hasKey) signingConfig = signingConfigs.getByName("upload")
         }
@@ -60,9 +65,10 @@ android {
     buildFeatures {
         compose = true
     }
-    // Google Play requires 16 KB page-size support (deadline Feb 2027): keep native
-    // libraries uncompressed and page-aligned in the bundle.
     packaging {
+        resources.excludes += setOf("META-INF/*.version", "META-INF/*.kotlin_module", "DebugProbesKt.bin")
+        // Google Play requires 16 KB page-size support (deadline Feb 2027): keep native
+        // libraries uncompressed and page-aligned in the bundle.
         jniLibs {
             useLegacyPackaging = false
         }
@@ -75,7 +81,6 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.activity:activity-compose:1.9.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
@@ -83,9 +88,12 @@ dependencies {
     implementation("androidx.print:print:1.0.0")
 
     // On-device ML (face alignment + background removal)
-    implementation("com.google.mlkit:face-detection:16.1.7")
+    implementation("com.google.android.gms:play-services-mlkit-face-detection:17.1.0")
     implementation("com.google.android.gms:play-services-mlkit-subject-segmentation:16.0.0-beta1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
+
+    // On-device alpha matting (MODNet via ONNX Runtime); model downloaded on first use
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.19.2")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
